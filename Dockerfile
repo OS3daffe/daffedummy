@@ -1,7 +1,7 @@
 FROM golang
  
-ADD . ~/Grid/go-workspace/src/unhosted/daffedummy
-RUN go install ~/Grid/go-workspace/src/unhosted/daffedummy
-ENTRYPOINT ~/Grid/go-workspace/bin/daffedummy
+ADD . /go/src/unhosted/daffedummy
+RUN go install /go/src/unhosted/daffedummy
+ENTRYPOINT /go/bin/daffedummy
  
 EXPOSE 8080
