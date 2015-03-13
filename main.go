@@ -6,6 +6,7 @@ import (
 	"labix.org/v2/mgo/bson"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 //ROUTING
@@ -35,8 +36,7 @@ func add(w http.ResponseWriter, r *http.Request) {
 		"s": string,
 	}
 
-	s, err := mgo.Dial("localhost:27017")
-	defer s.Close()
+	s, err := mgo.DialWithTimeout("localhost:27017", 100*time.Millisecond)
 
 	if err != nil {
 		w.Write([]byte("Sorry the database is down for now!!!"))
@@ -46,14 +46,14 @@ func add(w http.ResponseWriter, r *http.Request) {
 		_ = c.Insert(query)
 
 		w.Write([]byte("OK!!!"))
+		s.Close()
 	}
 
 }
 
 func count(w http.ResponseWriter, r *http.Request) {
 
-	s, err := mgo.Dial("localhost:27017")
-	defer s.Close()
+	s, err := mgo.DialWithTimeout("localhost:27017", 100*time.Millisecond)
 
 	if err != nil {
 		w.Write([]byte("Sorry the database is down for now!!!"))
@@ -63,6 +63,7 @@ func count(w http.ResponseWriter, r *http.Request) {
 		ct, _ := c.Count()
 
 		w.Write([]byte(strconv.Itoa(ct)))
+		s.Close()
 	}
 
 }
