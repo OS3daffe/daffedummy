@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gorilla/mux"
 	"labix.org/v2/mgo"
 	"labix.org/v2/mgo/bson"
@@ -36,10 +37,10 @@ func add(w http.ResponseWriter, r *http.Request) {
 		"s": string,
 	}
 
-	s, err := mgo.DialWithTimeout("localhost:27017", 100*time.Millisecond)
+	s, err := mgo.DialWithTimeout("127.0.0.1:27017", 100*time.Millisecond)
 
 	if err != nil {
-		w.Write([]byte("Sorry the database is down for now!!!"))
+		w.Write([]byte(fmt.Sprintf("%s", err)))
 	} else {
 		c := s.DB("daffe").C("dummy")
 
@@ -53,10 +54,9 @@ func add(w http.ResponseWriter, r *http.Request) {
 
 func count(w http.ResponseWriter, r *http.Request) {
 
-	s, err := mgo.DialWithTimeout("localhost:27017", 100*time.Millisecond)
-
+	s, err := mgo.DialWithTimeout("127.0.0.1:27017", 100*time.Millisecond)
 	if err != nil {
-		w.Write([]byte("Sorry the database is down for now!!!"))
+		w.Write([]byte(fmt.Sprintf("%s", err)))
 	} else {
 		c := s.DB("daffe").C("dummy")
 
