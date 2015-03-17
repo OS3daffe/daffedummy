@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strconv"
 	"time"
+	"os"
 )
 
 //ROUTING
@@ -24,8 +25,7 @@ func main() {
 	err := http.ListenAndServe(":8080", nil)
 
 	if err != nil {
-		panic(err)
-	}
+		panic(err)	}
 }
 
 func add(w http.ResponseWriter, r *http.Request) {
@@ -53,10 +53,12 @@ func add(w http.ResponseWriter, r *http.Request) {
 }
 
 func count(w http.ResponseWriter, r *http.Request) {
-
-	s, err := mgo.DialWithTimeout("127.0.0.1:27017", 100*time.Millisecond)
+  addr := os.GetEnv('MONGO_PORT_27017_TCP_ADDR')
+  port := os.GetEnv('MONGO_PORT_27017_TCP_PORT')
+  addrport := fmt.Sprintf('%s:%s', addr, port)
+	s, err := mgo.DialWithTimeout(addrport, 100*time.Millisecond)
 	if err != nil {
-		w.Write([]byte(fmt.Sprintf("%s", err)))
+		w.Write([]byte(fmt.Sprintf("%s - %s", err, addrport)))
 	} else {
 		c := s.DB("daffe").C("dummy")
 
